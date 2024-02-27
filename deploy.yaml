@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-pipeline-wifi-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: data-pipeline-wifi
+  template:
+    metadata:
+      labels:
+        app: data-pipeline-wifi
+    spec:
+      containers:
+      - name: wifi-points-cdmx
+        image: fgarandarodriguez/wifi-points-cdmx:latest
+        ports:
+        - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-pipeline-wifi-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: data-pipeline-wifi
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000

@@ -1,0 +1,24 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
+  flaskapp:
+    build: .
+    command: flask run --host=0.0.0.0
+    ports:
+      - "5000:5000"
+    environment:
+    - .env
+    depends_on:
+      - mongo
+
+  pipeline:
+    build: .
+    environment:
+      - .env
+    volumes:
+      - .:/app
+    entrypoint: ["python", "initialize_db.py"]
